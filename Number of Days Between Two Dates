@@ -1,0 +1,58 @@
+import java.util.*;
+
+public class Solution {
+
+    // Check whether a year is a leap year
+    static boolean isLeapYear(int year) {
+        return (year % 400 == 0) || (year % 4 == 0 && year % 100 != 0);
+    }
+
+    // Number of days in a particular month
+    static int daysInMonth(int year, int month) {
+        int[] days = {31, 28, 31, 30, 31, 30,
+                      31, 31, 30, 31, 30, 31};
+
+        if (month == 2 && isLeapYear(year)) {
+            return 29;
+        }
+
+        return days[month - 1];
+    }
+
+    // Convert date to total number of days
+    static int totalDays(String date) {
+        String[] parts = date.split("-");
+
+        int year = Integer.parseInt(parts[0]);
+        int month = Integer.parseInt(parts[1]);
+        int day = Integer.parseInt(parts[2]);
+
+        int total = 0;
+
+        // Add days for previous years
+        for (int y = 1971; y < year; y++) {
+            total += isLeapYear(y) ? 366 : 365;
+        }
+
+        // Add days for previous months
+        for (int m = 1; m < month; m++) {
+            total += daysInMonth(year, m);
+        }
+
+        // Add current day
+        total += day;
+
+        return total;
+    }
+
+    public static int daysBetweenDates(String date1, String date2) {
+        return Math.abs(totalDays(date1) - totalDays(date2));
+    }
+
+    public static void main(String[] args) {
+        String date1 = "2019-06-29";
+        String date2 = "2019-06-30";
+
+        System.out.println(daysBetweenDates(date1, date2));
+    }
+}
